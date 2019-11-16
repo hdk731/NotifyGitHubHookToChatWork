@@ -3,16 +3,35 @@ const querystring = require('querystring');
 
 exports.handler = (event, context, callback) => {
 
+    var branch = '';
     var gitpayload = JSON.parse(event.body);
     console.log(gitpayload);
     
     var str = '[info][title] GitHub お知らせ [/title]'; 
     str += gitpayload.sender.login + ' さんが ' + gitpayload.repository.full_name + ' をアップデートしました。\r\n\r\n';
-    str += 'EVENT:\r\n';
-    str += gitpayload.hook.events; 
-    str += '\r\n';
+    
+    str += 'Repository: ' + gitpayload.repository.full_name;
+    str += '\r\n';   
+    if ('ref' in gitpayload) {
+        branch = gitpayload.ref.replace('refs/heads/','');
+        str += 'Branch: ';
+        str += branch; 
+        str += '\r\n';   
+    }
+    if ('commits' in gitpayload) {
+        str += '[hr]';
+        gitpayload.commits.forEach(function(value ) {
+            str += 'message:';
+            str += '\r\n';
+            str += '　' + value.message; 
+            str += '\r\n';
+        });
+    }
     str += '[hr]';
     str += gitpayload.repository.html_url;
+    if (branch != '') {
+        str += '/tree/' + branch;
+    }
     str += '[/info]';
 
     var response = {
@@ -33,10 +52,10 @@ exports.handler = (event, context, callback) => {
         method: 'POST',
         hostname: 'api.chatwork.com',
         port: 443,
-        path: '/v2/rooms/{roomID}/messages',
+        path: '/v2/rooms/169903053/messages',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'X-ChatWorkToken':'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+            'X-ChatWorkToken':'b992840d1499c202618b19ffbca83f2b'
         }
     };
 
@@ -57,8 +76,3 @@ exports.handler = (event, context, callback) => {
     
     callback(null, response);
 };
-
-
-
-
-
