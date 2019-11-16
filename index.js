@@ -18,14 +18,22 @@ exports.handler = (event, context, callback) => {
         str += branch; 
         str += '\r\n';   
     }
-    if ('commits' in gitpayload) {
+    if (gitpayload.before == '0000000000000000000000000000000000000000') {
         str += '[hr]';
-        gitpayload.commits.forEach(function(value ) {
-            str += 'message:';
-            str += '\r\n';
-            str += '　' + value.message; 
-            str += '\r\n';
-        });
+        str += 'The branch has been created.';
+    }
+    else if (gitpayload.after == '0000000000000000000000000000000000000000') {
+        str += '[hr]';
+        str += 'The branch has been deleted.';
+    }
+    else if ('commits' in gitpayload) {
+        str += '[hr]';
+        if (gitpayload.commits.length > 0) {
+            gitpayload.commits.forEach(function(value ) {
+                str += value.message; 
+                str += '\r\n';
+            });
+        }
     }
     str += '[hr]';
     str += gitpayload.repository.html_url;
