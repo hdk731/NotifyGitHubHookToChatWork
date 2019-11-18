@@ -47,10 +47,6 @@ exports.handler = (event, context, callback) => {
         headers: {},
         body: ""
     };
-
-    var headers = {
-        'X-ChatWorkToken':'b992840d1499c202618b19ffbca83f2b'
-    };
     
     var payload = querystring.stringify({
         'body': str
@@ -60,10 +56,10 @@ exports.handler = (event, context, callback) => {
         method: 'POST',
         hostname: 'api.chatwork.com',
         port: 443,
-        path: '/v2/rooms/169903053/messages',
+        path: '/v2/rooms/xxxxxxxxx/messages',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'X-ChatWorkToken':'b992840d1499c202618b19ffbca83f2b'
+            'X-ChatWorkToken':'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
         }
     };
 
